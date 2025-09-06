@@ -1,13 +1,15 @@
 package com.thilshan.dream_shops.service.product;
 
 import com.thilshan.dream_shops.model.Product;
+import com.thilshan.dream_shops.request.AddProductRequest;
+import com.thilshan.dream_shops.request.ProductUpdateRequest;
 
 import java.util.List;
 
 public interface IProductService {
-    Product addProduct(Product product);
+    Product addProduct(AddProductRequest product);
     Product getProductById(Long id);
-    Product updateProduct(Long id, Product product);
+    Product updateProduct(ProductUpdateRequest request, Long productId);
     void deleteProductById(Long id, Product product);
 
     List<Product> getAllProducts();
