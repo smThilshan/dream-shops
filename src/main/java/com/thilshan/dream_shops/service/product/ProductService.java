@@ -1,13 +1,18 @@
 package com.thilshan.dream_shops.service.product;
 
+import com.thilshan.dream_shops.dto.ImageDto;
+import com.thilshan.dream_shops.dto.ProductDto;
 import com.thilshan.dream_shops.model.Category;
+import com.thilshan.dream_shops.model.Image;
 import com.thilshan.dream_shops.model.Product;
 import com.thilshan.dream_shops.request.AddProductRequest;
 import com.thilshan.dream_shops.request.ProductUpdateRequest;
 import com.thilshan.dream_shops.service.exception.ProductNotFoundException;
 import com.thilshan.dream_shops.service.repository.CategoryRepository;
+import com.thilshan.dream_shops.service.repository.ImageRepository;
 import com.thilshan.dream_shops.service.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +23,8 @@ import java.util.Optional;
 public class ProductService implements IProductService{
     private final ProductRepository productRepository;
     private final CategoryRepository  categoryRepository;
+    private final ImageRepository imageRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Product addProduct(AddProductRequest request) {
@@ -106,5 +113,17 @@ public class ProductService implements IProductService{
     @Override
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countProductsByBrandAndName(brand, name);
+    }
+
+    public List<ProductDto> getConvertedProducts(List<Product> products){
+        return products.stream().map(this::convertToDto).toList();
+    }
+
+    public ProductDto convertToDto(Product product){
+       ProductDto  productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imageDtos = images.stream().map(image -> modelMapper.map(image, ImageDto.class)).toList();
+        productDto.setImages(imageDtos);
+        return productDto;
     }
 }

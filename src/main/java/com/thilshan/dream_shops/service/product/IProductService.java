@@ -1,5 +1,6 @@
 package com.thilshan.dream_shops.service.product;
 
+import com.thilshan.dream_shops.dto.ProductDto;
 import com.thilshan.dream_shops.model.Product;
 import com.thilshan.dream_shops.request.AddProductRequest;
 import com.thilshan.dream_shops.request.ProductUpdateRequest;
@@ -19,4 +20,7 @@ public interface IProductService {
     List<Product> getProductsByName(String name);
     List<Product> getProductsByBrandAndName(String category, String name);
     Long countProductsByBrandAndName(String brand, String name);
+
+    List<ProductDto> getConvertedProducts(List<Product> products);
+    ProductDto convertToDto(Product product);
 }
