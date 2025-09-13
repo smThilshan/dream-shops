@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.catalina.User;
+
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -28,6 +28,9 @@ public class Cart {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Version
+    private Long version; // 👈 this is the fix
 
     public void addItem(CartItem item) {
         this.items.add(item);
