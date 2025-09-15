@@ -29,9 +29,6 @@ public class Cart {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Version
-    private Long version; // 👈 this is the fix
-
     public void addItem(CartItem item) {
         this.items.add(item);
         item.setCart(this);
