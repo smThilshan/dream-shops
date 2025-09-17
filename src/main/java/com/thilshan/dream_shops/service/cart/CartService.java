@@ -2,9 +2,11 @@ package com.thilshan.dream_shops.service.cart;
 
 import com.thilshan.dream_shops.model.Cart;
 import com.thilshan.dream_shops.model.CartItem;
+import com.thilshan.dream_shops.model.User;
 import com.thilshan.dream_shops.service.exception.ResourceNotFoundException;
 import com.thilshan.dream_shops.service.repository.CartItemRepository;
 import com.thilshan.dream_shops.service.repository.CartRepository;
+import com.thilshan.dream_shops.service.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import static java.util.Arrays.stream;
 public class CartService implements ICartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
     @Override
     public Cart getCart(Long id) {
@@ -45,8 +48,12 @@ public class CartService implements ICartService {
     @Override
     public Long initializeNewCart() {
         Cart newCart = new Cart();
-        return cartRepository.save(newCart).getId(); // don’t set ID manually
+        Long newCartId = cartIdGenerator.incrementAndGet();
+        newCart.setId(newCartId);
+        return cartRepository.save(newCart).getId();
     }
+
+
 
     public Cart getCartByUserId(Long userId) {
         return cartRepository.findByUserId(userId);

@@ -4,6 +4,8 @@ import com.thilshan.dream_shops.response.ApiResponse;
 import com.thilshan.dream_shops.service.cart.ICartItemService;
 import com.thilshan.dream_shops.service.cart.ICartService;
 import com.thilshan.dream_shops.service.exception.ResourceNotFoundException;
+import com.thilshan.dream_shops.service.repository.UserRepository;
+import com.thilshan.dream_shops.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class CartItemController {
     private final ICartItemService cartItemService;
     private final ICartService cartService;
+    private final IUserService userService;
+    private final UserRepository repository;
 
     @PostMapping("/item/add")
     public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId,
