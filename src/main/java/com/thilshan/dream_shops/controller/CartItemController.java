@@ -1,5 +1,7 @@
 package com.thilshan.dream_shops.controller;
 
+import com.thilshan.dream_shops.model.Cart;
+import com.thilshan.dream_shops.model.User;
 import com.thilshan.dream_shops.response.ApiResponse;
 import com.thilshan.dream_shops.service.cart.ICartItemService;
 import com.thilshan.dream_shops.service.cart.ICartService;
@@ -22,14 +24,14 @@ public class CartItemController {
     private final UserRepository repository;
 
     @PostMapping("/item/add")
-    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId,
+    public ResponseEntity<ApiResponse> addItemToCart(
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity) {
         try {
-            if (cartId == null){
-                cartId = cartService.initializeNewCart();
-            }
-            cartItemService.addItemToCart(cartId, productId, quantity);
+            User user = userService.getUserById(1L);
+            Cart cart = cartService.initializeNewCart(user);
+
+            cartItemService.addItemToCart(cart.getId(), productId, quantity);
             return ResponseEntity.ok(new ApiResponse("Item added to cart successfully", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Failed to add item to cart", e.getMessage()));
