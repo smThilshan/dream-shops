@@ -57,6 +57,7 @@ public class OrderService implements IOrderService {
     private Order createOrder(Cart cart) {
         Order order = new Order();
         order.setOrderStatus(OrderStatus.PENDING);
+        order.setUser(cart.getUser());
         order.setOrderDate(LocalDate.now());
         return order;
 
@@ -80,7 +81,8 @@ public class OrderService implements IOrderService {
         return orderItemList.stream().map(item -> item.getPrice().multiply(new BigDecimal(item.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private OrderDto convertToDto(Order order) {
+    @Override
+    public OrderDto convertToDto(Order order) {
         return modelMapper.map(order, OrderDto.class);
     }
 }

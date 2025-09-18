@@ -9,4 +9,6 @@ public interface IOrderService {
     Order placeOrder( Long userId);
     OrderDto getOrderDetails(Long orderId);
     List<OrderDto>  getUsersOrders(Long userId);
+
+    OrderDto convertToDto(Order order);
 }
