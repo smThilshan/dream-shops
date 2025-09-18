@@ -5,6 +5,7 @@ import com.thilshan.dream_shops.model.Product;
 import com.thilshan.dream_shops.request.AddProductRequest;
 import com.thilshan.dream_shops.request.ProductUpdateRequest;
 import com.thilshan.dream_shops.response.ApiResponse;
+import com.thilshan.dream_shops.service.exception.AlreadyExistException;
 import com.thilshan.dream_shops.service.exception.ProductNotFoundException;
 import com.thilshan.dream_shops.service.exception.ResourceNotFoundException;
 import com.thilshan.dream_shops.service.product.IProductService;
@@ -31,7 +32,7 @@ public class ProductController  {
             List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
             return ResponseEntity.ok(new ApiResponse("Products retrieved successfully", convertedProducts));
         } catch (Exception e) {
-          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Failed to retrieve products", e.getMessage()));
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
@@ -43,6 +44,7 @@ public class ProductController  {
             return ResponseEntity.ok(new ApiResponse("Product retrieved successfully", productDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+
         }
     }
 
@@ -52,8 +54,8 @@ public class ProductController  {
             Product theProduct = productService.addProduct(product);
             ProductDto productDto = productService.convertToDto(theProduct);
             return ResponseEntity.ok(new ApiResponse("Product added successfully", productDto));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Failed to add product",null));
+        } catch (AlreadyExistException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse("Product already exist",null));
         }
     }
 
@@ -150,6 +152,7 @@ public class ProductController  {
             return ResponseEntity.ok(new ApiResponse("success", productDtos));
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), e.getMessage()));
+
         }
     }
 
@@ -160,7 +163,8 @@ public class ProductController  {
 
             return ResponseEntity.ok(new ApiResponse("Product count!", productCount));
         } catch (Exception e) {
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse("Product already exist", e.getMessage()));
+
         }
     }
 

@@ -22,7 +22,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> getUserById(@PathVariable Long userId) {
         try {
             var user = userService.getUserById(userId);
-            return ResponseEntity.ok(new ApiResponse("User retrieved successfully", user));
+            UserDto userDto  =  userService.convertUserToDto(user);
+            return ResponseEntity.ok(new ApiResponse("User retrieved successfully", userDto));
         } catch (Exception e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("User not found", e.getMessage()));
         }

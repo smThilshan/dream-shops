@@ -1,6 +1,7 @@
 package com.thilshan.dream_shops.service.user;
 
 import com.thilshan.dream_shops.dto.UserDto;
+import com.thilshan.dream_shops.model.Cart;
 import com.thilshan.dream_shops.model.User;
 import com.thilshan.dream_shops.request.CreateUserRequest;
 import com.thilshan.dream_shops.request.UserUpdateRequest;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements IUserService {
     private final UserRepository userRepository;
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @Override
     public User getUserById(Long userId) {
@@ -34,6 +35,10 @@ public class UserService implements IUserService {
                     user.setLastName(req.getLastName());
                     user.setEmail(req.getEmail());
                     user.setPassword(req.getPassword());
+
+                    Cart cart = new Cart();
+                    cart.setUser(user);
+                    user.setCart(cart);
 
                     return userRepository.save(user);
                 }).orElseThrow(()-> new AlreadyExistException("Oops!" +request.getEmail() +" already exists!"));
