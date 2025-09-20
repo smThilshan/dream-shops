@@ -14,14 +14,15 @@ import java.security.Key;
 import java.util.Date;
 import java.util.List;
 
+
 @Component
 public class JwtUtils {
     @Value("${auth.token.jwtSecret}")
     private String jwtSecret;
-    @Value("${auth.token.expirationInMins}")
+    @Value("${auth.token.expirationInMs}")
     private int expirationTime;
 
-    private String generateTokenForUser(Authentication authentication) {
+    public String generateTokenForUser(Authentication authentication) {
         ShopUserDetails userPrincipal = (ShopUserDetails) authentication.getPrincipal();
 
         List<String> roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
@@ -31,7 +32,7 @@ public class JwtUtils {
                 .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + expirationTime))
-                .signWith(key(), SignatureAlgorithm.ES256).compact();
+                .signWith(key(), SignatureAlgorithm.HS256).compact();
     }
 
 private Key key(){

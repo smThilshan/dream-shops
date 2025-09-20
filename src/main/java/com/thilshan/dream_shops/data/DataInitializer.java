@@ -60,7 +60,7 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
         Role adminRole = roleRepository.findByRoleName("ROLE_ADMIN").get();
 
         for (int i = 1; i <= 2; i++) {
-            String defaultEmail = "user" + i + "@example.com";
+            String defaultEmail = "admin" + i + "@example.com";
             if (userRepository.existsByEmail(defaultEmail)) {
 
                 continue;
